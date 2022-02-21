@@ -25,28 +25,28 @@ Optionally, you can include another parameter to select the restranding method:
 
 # How it works
 
-Each forward read is assumed to have a particular form:
+Each forward read is assumed to have a particular form, based on Oxford Nanopore PCR-cDNA PCB109 design:
 
-``` handle - barcode - SSP - mRNA - polyA - VNP_reverse_complement - barcode_reverse_complement - handle_reverse complement ```
+``` barcode - SSP - mRNA - polyA - VNP_reverse_complement - barcode_reverse_complement ```
 
 While a reverse read takes the form:
 
-``` handle - barcode - VNP - polyT - mRNA_reverse_complement - SSP_reverse_complement - barcode_reverse_complement - handle_reverse complement ```
+``` barcode - VNP - polyT - mRNA_reverse_complement - SSP_reverse_complement - barcode_reverse_complement ```
 
 Because of these differences in form, we can use a few techniques for classifying direction:
 
 ## PolyA/PolyT Classification
 
-A naive method of looking through each sequence for a PolyA tail of ~12 consecutive As near the start, and a PolyT tail of ~12 consecutive Ts near the end.
+A naive method of looking through each sequence for a PolyA tail of ~12 consecutive As near the end (indicative of a positive strand read), or a PolyT leader of ~12 consecutive Ts near the start (indicative of a negative strand read).
 
-| PolyA tail present  | PolyT tail present  | Classification  |
+| PolyA tail present  | PolyT leader present  | Classification  |
 | ------------------- | ------------------- | --------------- |
 | Yes                 | No                  | Forward         |
 | No                  | Yes                 | Reverse         |
 | Yes                 | Yes                 | Ambiguous       |
 | No                  | No                  | Ambiguous       |
 
-The drawback of this method is that often sequences include native PolyA/PolyT tails, leading to ambiguous reads.
+The drawback of this method is that often sequences include native PolyA/PolyT stretches, leading to ambiguous reads.
 
 ## SSP/VNP Classification
 
